@@ -68,7 +68,7 @@ JMimpute_alc <- mitmlComplete(jomoImpute(datalong_alc,
 # For each imputed dataset, create the final exposure variables to be used in analysis
 for (l in 1:nimpute){
   JMimpute_alc[[l]]$alc_12m <- as.numeric(levels(JMimpute_alc[[l]]$alc_12m))[JMimpute_alc[[l]]$alc_12m]
-  JMimpute_alc[[l]]$binge <- ifelse(as.numeric(JMimpute_alc[[l]]$audit_1)==1,0,1)
+  JMimpute_alc[[l]]$binge <- ifelse(as.numeric(JMimpute_alc[[l]]$audit_3)==1,0,1)
   JMimpute_alc[[l]]$auditc <- as.numeric(JMimpute_alc[[l]]$audit_1) + 
     as.numeric(JMimpute_alc[[l]]$audit_2) + 
     as.numeric(JMimpute_alc[[l]]$audit_3)-3
