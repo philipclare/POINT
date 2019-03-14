@@ -1,5 +1,5 @@
 # The effect of prolonged alcohol use on chronic non-cancer pain in users of prescription opioids
-R Analysis Code
+## R Analysis Code
 
 This repository contains R code used in the TMLE analysis of POINT data on the effect of alcohol exposure on chronic pain, by Clare et al. 2019
 
