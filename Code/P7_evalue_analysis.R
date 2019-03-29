@@ -1,5 +1,5 @@
 
-## SYNTAX FILE 6 - E-VALUE ANALYSIS    ##
+## SYNTAX FILE 7 - E-VALUE ANALYSIS                          ##
 
 cloudstor <- "C:/Users/z3312911/Cloudstor/" # change to master file path
 .libPaths(paste0(cloudstor,"R Library"))
@@ -11,6 +11,7 @@ if (any(missing)) {
 }
 library ("EValue")
 
+# Load Cohen's d results created by primary analysis file
 load(file=paste0(cloudstor,"PhD/Paper 6 - POINT application/Results/cdresults.RData"))
 
 e1 <- evalues.MD(est=cdresults[1,1], se=cdresults[1,2])

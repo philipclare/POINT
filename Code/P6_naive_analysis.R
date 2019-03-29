@@ -1,4 +1,5 @@
-## SYNTAX FILE 5 - NAIVE ANALYSIS                            ##
+
+## SYNTAX FILE 6 - NAIVE ANALYSIS                            ##
 
 cloudstor <- "C:/Users/z3312911/Cloudstor/" # change to master file path
 .libPaths(paste0(cloudstor,"R Library"))
@@ -14,7 +15,11 @@ library("Amelia")
 
 set.seed(546432,kind="L'Ecuyer-CMRG")
 
-numcores <- future::availableCores()
+# Load imputed data
+load(file=paste0(cloudstor,"PhD/Paper 6 - POINT application/Data/Imputed data - wide.RData"))
+
+# Set up parallel processing to reduce analysis time
+numcores <- future::availableCores()-2
 cl <- makeCluster(numcores)
 parallel::clusterEvalQ(cl, cloudstor <- "C:/Users/z3312911/Cloudstor/")
 parallel::clusterEvalQ(cl, .libPaths(paste0(cloudstor,"R Library")))
@@ -28,10 +33,9 @@ parallel::clusterEvalQ(cl, varlist_5 <- c("PHQ9_Mod_sev","GADMod2Sev","Antidepre
 parallel::clusterEvalQ(cl, varlist_6 <- c("PHQ9_Mod_sev","GADMod2Sev","Antidepressant_week","Antipsychotic_week","benzo_week","Nonopioid_analgesic_week","Pregabalin_week","can_12m","cig_12m","opioid90","alc_pain_12m","auditcprob","acum","BPI_interference"))
 
 ## ANY ALCOHOL CONSUMPTION ANALYSIS ##
-load(file=paste0(cloudstor,"PhD/Paper 6 - POINT application/Data/alcuse1.RData"))
-load(file=paste0(cloudstor,"PhD/Paper 6 - POINT application/Data/alcuse2.RData"))
-
-rialc_12m1 <- parLapply(cl=cl, dataalcuse1, function (x) {
+rialc_12m1 <- parLapply(cl=cl, impdatawide, function (x) {
+  x <- x[,-15]
+  x <- x[,c(-27,-28,-30,-43,-44,-46,-59,-60,-62,-75,-76,-78,-91,-92,-94,-107,-108,-110)]
   x$acum1 <- x$alc_12m1
   x$acum2 <- x$acum1 + x$alc_12m2
   x$acum3 <- x$acum2 + x$alc_12m3
@@ -69,7 +73,9 @@ rialc_12mco1 <- matrix(unlist(parLapply(cl=cl, rialc_12m1, function (x) {coef(su
 rialc_12mse1 <- matrix(unlist(parLapply(cl=cl, rialc_12m1, function (x) {vcov(x)[2,2]})),nrow=50,ncol=1)
 rialc_12mres1 <- matrix(unlist(mi.meld(q=rialc_12mco1, se=rialc_12mse1)),nrow=1,ncol=2)
 
-rialc_12m2 <- parLapply(cl=cl, dataalcuse2, function (x) {
+rialc_12m2 <- parLapply(cl=cl, impdatawide, function (x) {
+  x <- x[,-15]
+  x <- x[,c(-27,-28,-29,-43,-44,-45,-59,-60,-61,-75,-76,-77,-91,-92,-93,-107,-108,-109)]
   x$acum1 <- x$alc_12m1
   x$acum2 <- x$acum1 + x$alc_12m2
   x$acum3 <- x$acum2 + x$alc_12m3
@@ -104,14 +110,13 @@ rialc_12mco2 <- matrix(unlist(parLapply(cl=cl, rialc_12m2, function (x) {coef(su
 rialc_12mse2 <- matrix(unlist(parLapply(cl=cl, rialc_12m2, function (x) {vcov(x)[2,2]})),nrow=50,ncol=1)
 rialc_12mres2 <- matrix(unlist(mi.meld(q=rialc_12mco2, se=rialc_12mse2)),nrow=1,ncol=2)
 
-rm(list=c("rialc_12m1","rialc_12mco1","rialc_12mse1","dataalcuse1",
-          "rialc_12m2","rialc_12mco2","rialc_12mse2","dataalcuse2"))
+rm(list=c("rialc_12m1","rialc_12mco1","rialc_12mse1",
+          "rialc_12m2","rialc_12mco2","rialc_12mse2"))
 
 ## BINGE DRINKING ANALYSIS ##
-load(file=paste0(cloudstor,"PhD/Paper 6 - POINT application/Data/binge1.RData"))
-load(file=paste0(cloudstor,"PhD/Paper 6 - POINT application/Data/binge2.RData"))
-
-ribinge1 <- parLapply(cl=cl, databinge1, function (x) {
+ribinge1 <- parLapply(cl=cl, impdatawide, function (x) {
+  x <- x[,-15]
+  x <- x[,c(-26,-28,-30,-42,-44,-46,-58,-60,-62,-74,-76,-78,-90,-92,-94,-106,-108,-110)]
   x$acum1 <- 0
   x$acum2 <- x$binge2
   x$acum3 <- x$acum2 + x$binge3
@@ -147,7 +152,9 @@ ribingeco1 <- matrix(unlist(parLapply(cl=cl, ribinge1, function (x) {coef(summar
 ribingese1 <- matrix(unlist(parLapply(cl=cl, ribinge1, function (x) {vcov(x)[2,2]})),nrow=50,ncol=1)
 ribingeres1 <- matrix(unlist(mi.meld(q=ribingeco1, se=ribingese1)),nrow=1,ncol=2)
 
-ribinge2 <- parLapply(cl=cl, databinge2, function (x) {
+ribinge2 <- parLapply(cl=cl, impdatawide, function (x) {
+  x <- x[,-15]
+  x <- x[,c(-26,-28,-29,-42,-44,-45,-58,-60,-61,-74,-76,-77,-90,-92,-93,-106,-108,-109)]
   x$acum1 <- 0
   x$acum2 <- x$binge2
   x$acum3 <- x$acum2 + x$binge3
@@ -183,14 +190,13 @@ ribingeco2 <- matrix(unlist(parLapply(cl=cl, ribinge2, function (x) {coef(summar
 ribingese2 <- matrix(unlist(parLapply(cl=cl, ribinge2, function (x) {vcov(x)[2,2]})),nrow=50,ncol=1)
 ribingeres2 <- matrix(unlist(mi.meld(q=ribingeco2, se=ribingese2)),nrow=1,ncol=2)
 
-rm(list=c("ribinge1","ribingeco1","ribingese1","databinge1",
-          "ribinge2","ribingeco2","ribingese2","databinge2"))
+rm(list=c("ribinge1","ribingeco1","ribingese1",
+          "ribinge2","ribingeco2","ribingese2"))
 
 ## AUDIT-C HAZARDOUS DRINKING ANALYSIS ##
-load(file=paste0(cloudstor,"PhD/Paper 6 - POINT application/Data/auditprob1.RData"))
-load(file=paste0(cloudstor,"PhD/Paper 6 - POINT application/Data/auditprob2.RData"))
-
-riaudit1 <- parLapply(cl=cl, dataauditprob1, function (x) {
+riaudit1 <- parLapply(cl=cl, impdatawide, function (x) {
+  x <- x[,-15]
+  x <- x[,c(-26,-27,-30,-42,-43,-46,-58,-59,-62,-74,-75,-78,-90,-91,-94,-106,-107,-110)]
   x$acum1 <- 0
   x$acum2 <- x$auditcprob2
   x$acum3 <- x$acum2 + x$auditcprob3
@@ -226,7 +232,9 @@ riauditco1 <- matrix(unlist(parLapply(cl=cl, riaudit1, function (x) {coef(summar
 riauditse1 <- matrix(unlist(parLapply(cl=cl, riaudit1, function (x) {vcov(x)[2,2]})),nrow=50,ncol=1)
 riauditres1 <- matrix(unlist(mi.meld(q=riauditco1, se=riauditse1)),nrow=1,ncol=2)
 
-riaudit2 <- parLapply(cl=cl, dataauditprob2, function (x) {
+riaudit2 <- parLapply(cl=cl, impdatawide, function (x) {
+  x <- x[,-15]
+  x <- x[,c(-26,-27,-29,-42,-43,-45,-58,-59,-61,-74,-75,-77,-90,-91,-93,-106,-107,-109)]
   x$acum1 <- 0
   x$acum2 <- x$auditcprob2
   x$acum3 <- x$acum2 + x$auditcprob3
@@ -262,11 +270,12 @@ riauditco2 <- matrix(unlist(parLapply(cl=cl, riaudit2, function (x) {coef(summar
 riauditse2 <- matrix(unlist(parLapply(cl=cl, riaudit2, function (x) {vcov(x)[2,2]})),nrow=50,ncol=1)
 riauditres2 <- matrix(unlist(mi.meld(q=riauditco2, se=riauditse2)),nrow=1,ncol=2)
 
-rm(list=c("riaudit1","riauditco1","riauditse1","dataauditprob1",
-          "riaudit2","riauditco2","riauditse2","dataauditprob2"))
+rm(list=c("riaudit1","riauditco1","riauditse1",
+          "riaudit2","riauditco2","riauditse2"))
 
 riresults <- matrix(c(rialc_12mres1,rialc_12mres2,ribingeres1,ribingeres2,riauditres1,riauditres2),byrow=TRUE,ncol=4,nrow=3)
 rownames(riresults) <- c("Any alcohol consumption","Binge drinking","AUDIT-C Problematic drinking")
 colnames(riresults) <- c("BPI Pain Score log(OR)","BPI Pain Score SE","BPI Pain Int log(OR)","BPI Pain Int SE")
 
 save(riresults,file=paste0(cloudstor,"PhD/Paper 6 - POINT application/Results/riresults.RData"))
+

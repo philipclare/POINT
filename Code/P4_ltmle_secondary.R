@@ -1,3 +1,4 @@
+
 ## SYNTAX FILE 4 - LTMLE ANALYSIS EXCLUDING NON-DRINKERS     ##
 
 cloudstor <- "C:/Users/z3312911/Cloudstor/" # change to master file path
@@ -12,58 +13,13 @@ if (any(missing)) {
 library ("parallel")
 library ("Amelia")
 
-set.seed(599648,kind="L'Ecuyer-CMRG")
+set.seed(857915,kind="L'Ecuyer-CMRG")
 
-# Load imputed data created in Syntax File 2
-load(file=paste0(cloudstor,"PhD/Paper 6 - POINT Application/Data/Imputed data.RData"))
+# Load imputed data
+load(file=paste0(cloudstor,"PhD/Paper 6 - POINT application/Data/Imputed data - wide.RData"))
 
-# Define variable lists which determine variable order and varying variables for reshape
-flist <- c("Participant_ID","time","b_Actual_age","b_employ3","b_sex","b_edu","b_MaritalStatus","b_Arth_12mR","b_Back_12mR","b_Head_12mR","b_Visc_12mR","b_Fibro_12mR","b_Cmplx_12mR","b_Shing_12mR","b_pain_duration_yrs3","PHQ9_Mod_sev","GADMod2Sev","Antidepressant_week","Antipsychotic_week","benzo_week","Nonopioid_analgesic_week","Pregabalin_week","can_12m","cig_12m","opioid90","alc_pain_12m","alc_12m","binge","auditcprob","BPI_PScore","BPI_interference")
-varlist <- c("PHQ9_Mod_sev","GADMod2Sev","Antidepressant_week","Antipsychotic_week","benzo_week","Nonopioid_analgesic_week","Pregabalin_week","can_12m","cig_12m","opioid90","alc_pain_12m","alc_12m","binge","auditcprob","BPI_PScore","BPI_interference")
-
-# Reshape data to wide format for use by LTMLE
-impdatawide <- lapply(JMimpute_alc, function (x) {
-  x <- as.data.frame(x[,flist])
-  wide <- reshape(x,
-                  v.names=varlist,
-                  idvar="Participant_ID",
-                  timevar="time",
-                  sep="",
-                  direction="wide")
-  wide
-})
-
-databinge1red <- lapply(impdatawide, function (x) {
-  x <- x[,c(-28,-30,-44,-46,-60,-62,-76,-78,-92,-94,-108,-110)]
-  x$acum <- x$alc_12m1 + x$alc_12m2 + x$alc_12m3 + x$alc_12m4 + x$alc_12m5 + x$alc_12m6
-  x <- x[!x$acum==0,]
-  x <- x[,c(-26,-40,-54,-68,-82,-96,-99,-100,-101,-102,-103,-104)]
-  x
-})
-databinge2red <- lapply(impdatawide, function (x) {
-  x <- x[,c(-28,-29,-44,-45,-60,-61,-76,-77,-92,-93,-108,-109)]
-  x$acum <- x$alc_12m1 + x$alc_12m2 + x$alc_12m3 + x$alc_12m4 + x$alc_12m5 + x$alc_12m6
-  x <- x[!x$acum==0,]
-  x <- x[,c(-26,-40,-54,-68,-82,-96,-99,-100,-101,-102,-103,-104)]
-  x
-})
-
-dataauditprob1red <- lapply(impdatawide, function (x) {
-  x <- x[,c(-27,-30,-43,-46,-59,-62,-75,-78,-91,-94,-107,-110)]
-  x$acum <- x$alc_12m1 + x$alc_12m2 + x$alc_12m3 + x$alc_12m4 + x$alc_12m5 + x$alc_12m6
-  x <- x[!x$acum==0,]
-  x <- x[,c(-26,-40,-54,-68,-82,-96,-99,-100,-101,-102,-103,-104)]
-  x
-})
-dataauditprob2red <- lapply(impdatawide, function (x) {
-  x <- x[,c(-27,-29,-43,-45,-59,-61,-75,-77,-91,-93,-107,-109)]
-  x$acum <- x$alc_12m1 + x$alc_12m2 + x$alc_12m3 + x$alc_12m4 + x$alc_12m5 + x$alc_12m6
-  x <- x[!x$acum==0,]
-  x <- x[,c(-26,-40,-54,-68,-82,-96,-99,-100,-101,-102,-103,-104)]
-  x
-})
-
-numcores <- future::availableCores()-2
+# Set up parallel processing to reduce analysis time
+numcores <- future::availableCores()
 cl <- makeCluster(numcores)
 parallel::clusterEvalQ(cl, cloudstor <- "C:/Users/z3312911/Cloudstor/")
 parallel::clusterEvalQ(cl, .libPaths(paste0(cloudstor,"R Library")))
@@ -103,10 +59,28 @@ parallel::clusterEvalQ(cl, create.Learner("SL.ranger", params = list(num.trees =
 parallel::clusterEvalQ(cl, create.Learner("SL.randomForest", params = list(num.trees = 250)))
 parallel::clusterEvalQ(cl, SLlib <- list(Q=c("SL.mean","SL.glm","SL.gam"),
                                          g=c("SL.mean","SL.glm","SL.gam","SL.ranger_1")))
-
+parallel::clusterEvalQ(cl, flist <- c("Participant_ID","time","b_Actual_age","b_employ3","b_sex","b_edu","b_MaritalStatus","b_Arth_12mR","b_Back_12mR","b_Head_12mR","b_Visc_12mR","b_Fibro_12mR","b_Cmplx_12mR","b_Shing_12mR","b_pain_duration_yrs3","PHQ9_Mod_sev","GADMod2Sev","Antidepressant_week","Antipsychotic_week","benzo_week","Nonopioid_analgesic_week","Pregabalin_week","can_12m","cig_12m","opioid90","alc_pain_12m","alc_12m","binge","auditcprob","BPI_PScore","BPI_interference"))
+parallel::clusterEvalQ(cl, varlist <- c("PHQ9_Mod_sev","GADMod2Sev","Antidepressant_week","Antipsychotic_week","benzo_week","Nonopioid_analgesic_week","Pregabalin_week","can_12m","cig_12m","opioid90","alc_pain_12m","alc_12m","binge","auditcprob","BPI_PScore","BPI_interference"))
 
 ## BINGE DRINKING ANALYSIS ##
-jtbinge1 <- parLapply(cl=cl, databinge1red, function (x) {ltmle(x,
+databinge1_sub1 <- parLapply(cl,impdatawide, function (x) {
+  x <- x[,-15]
+  x <- x[,c(-28,-30,-44,-46,-60,-62,-76,-78,-92,-94,-108,-110)]
+  x$acum <- x$alc_12m1 + x$alc_12m2 + x$alc_12m3 + x$alc_12m4 + x$alc_12m5 + x$alc_12m6
+  x <- x[!x$acum==0,]
+  x <- x[,c(-26,-40,-54,-68,-82,-96,-99,-100,-101,-102,-103,-104)]
+  x
+})
+databinge2_sub1 <- parLapply(cl,impdatawide, function (x) {
+  x <- x[,-15]
+  x <- x[,c(-28,-29,-44,-45,-60,-61,-76,-77,-92,-93,-108,-109)]
+  x$acum <- x$alc_12m1 + x$alc_12m2 + x$alc_12m3 + x$alc_12m4 + x$alc_12m5 + x$alc_12m6
+  x <- x[!x$acum==0,]
+  x <- x[,c(-26,-40,-54,-68,-82,-96,-99,-100,-101,-102,-103,-104)]
+  x
+})
+
+jtbinge1 <- parLapply(cl=cl, databinge1_sub1, function (x) {ltmle(x,
                                                              Anodes=c("binge2","binge3","binge4","binge5","binge6"),
                                                              Lnodes=Lvars2,
                                                              Ynodes=c("BPI_PScore2","BPI_PScore3","BPI_PScore4","BPI_PScore5","BPI_PScore6"),
@@ -118,7 +92,7 @@ jtbingeco1 <- matrix(unlist(parLapply(cl=cl, jtbingeres1, function (x) {x$effect
 jtbingese1 <- matrix(unlist(parLapply(cl=cl, jtbingeres1, function (x) {x$effect.measures$ATE$std.dev})),nrow=50,ncol=1)
 jtbingeres1 <- matrix(unlist(mi.meld(q=jtbingeco1, se=jtbingese1)),nrow=1,ncol=2)
 
-jtbinge2 <- parLapply(cl=cl, databinge2red, function (x) {ltmle(x,
+jtbinge2 <- parLapply(cl=cl, databinge2_sub1, function (x) {ltmle(x,
                                                              Anodes=c("binge2","binge3","binge4","binge5","binge6"),
                                                              Lnodes=Lvars2,
                                                              Ynodes=c("BPI_interference2","BPI_interference3","BPI_interference4","BPI_interference5","BPI_interference6"),
@@ -130,14 +104,28 @@ jtbingeco2 <- matrix(unlist(parLapply(cl=cl, jtbingeres2, function (x) {x$effect
 jtbingese2 <- matrix(unlist(parLapply(cl=cl, jtbingeres2, function (x) {x$effect.measures$ATE$std.dev})),nrow=50,ncol=1)
 jtbingeres2 <- matrix(unlist(mi.meld(q=jtbingeco2, se=jtbingese2)),nrow=1,ncol=2)
 
-rm(list=c("jtbinge1","jtbingeco1","jtbingese1",
-          "jtbinge2","jtbingeco2","jtbingese2"))
+rm(list=c("jtbinge1","jtbingeco1","jtbingese1","databinge1_sub1",
+          "jtbinge2","jtbingeco2","jtbingese2","databinge2_sub1"))
 
 ## AUDIT PROBLEMATIC DRINKING ANALYSIS ##
-load(file=paste0(cloudstor,"PhD/Paper 6 - POINT application/Data/auditprob1.RData"))
-load(file=paste0(cloudstor,"PhD/Paper 6 - POINT application/Data/auditprob2.RData"))
+dataauditprob1_sub1 <- parLapply(cl,impdatawide, function (x) {
+  x <- x[,-15]
+  x <- x[,c(-27,-30,-43,-46,-59,-62,-75,-78,-91,-94,-107,-110)]
+  x$acum <- x$alc_12m1 + x$alc_12m2 + x$alc_12m3 + x$alc_12m4 + x$alc_12m5 + x$alc_12m6
+  x <- x[!x$acum==0,]
+  x <- x[,c(-26,-40,-54,-68,-82,-96,-99,-100,-101,-102,-103,-104)]
+  x
+})
+dataauditprob2_sub1 <- parLapply(cl,impdatawide, function (x) {
+  x <- x[,-15]
+  x <- x[,c(-27,-29,-43,-45,-59,-61,-75,-77,-91,-93,-107,-109)]
+  x$acum <- x$alc_12m1 + x$alc_12m2 + x$alc_12m3 + x$alc_12m4 + x$alc_12m5 + x$alc_12m6
+  x <- x[!x$acum==0,]
+  x <- x[,c(-26,-40,-54,-68,-82,-96,-99,-100,-101,-102,-103,-104)]
+  x
+})
 
-jtaudit1 <- parLapply(cl=cl, dataauditprob1red, function (x) {ltmle(x,
+jtaudit1 <- parLapply(cl=cl, dataauditprob1_sub1, function (x) {ltmle(x,
                                                                  Anodes=c("auditcprob2","auditcprob3","auditcprob4","auditcprob5","auditcprob6"),
                                                                  Lnodes=Lvars2,
                                                                  Ynodes=c("BPI_PScore2","BPI_PScore3","BPI_PScore4","BPI_PScore5","BPI_PScore6"),
@@ -149,7 +137,7 @@ jtauditco1 <- matrix(unlist(parLapply(cl=cl, jtauditres1, function (x) {x$effect
 jtauditse1 <- matrix(unlist(parLapply(cl=cl, jtauditres1, function (x) {x$effect.measures$ATE$std.dev})),nrow=50,ncol=1)
 jtauditres1 <- matrix(unlist(mi.meld(q=jtauditco1, se=jtauditse1)),nrow=1,ncol=2)
 
-jtaudit2 <- parLapply(cl=cl, dataauditprob2red, function (x) {ltmle(x,
+jtaudit2 <- parLapply(cl=cl, dataauditprob2_sub1, function (x) {ltmle(x,
                                                                  Anodes=c("auditcprob2","auditcprob3","auditcprob4","auditcprob5","auditcprob6"),
                                                                  Lnodes=Lvars2,
                                                                  Ynodes=c("BPI_interference2","BPI_interference3","BPI_interference4","BPI_interference5","BPI_interference6"),
@@ -161,12 +149,13 @@ jtauditco2 <- matrix(unlist(parLapply(cl=cl, jtauditres2, function (x) {x$effect
 jtauditse2 <- matrix(unlist(parLapply(cl=cl, jtauditres2, function (x) {x$effect.measures$ATE$std.dev})),nrow=50,ncol=1)
 jtauditres2 <- matrix(unlist(mi.meld(q=jtauditco2, se=jtauditse2)),nrow=1,ncol=2)
 
-rm(list=c("jtaudit1","jtauditco1","jtauditse1",
-          "jtaudit2","jtauditco2","jtauditse2"))
+rm(list=c("jtaudit1","jtauditco1","jtauditse1","dataauditprob1_sub1",
+          "jtaudit2","jtauditco2","jtauditse2","dataauditprob2_sub1"))
 
 ## COMBINE RESULTS INTO MATRIX FOR EXCEL ##
-jtresults2 <- matrix(c(jtbingeres1,jtbingeres2,jtauditres1,jtauditres2),byrow=TRUE,ncol=4,nrow=2)
-rownames(jtresults2) <- c("Binge drinking","AUDIT-C Problematic drinking")
-colnames(jtresults2) <- c("BPI Pain Score log(OR)","BPI Pain Score SE","BPI Pain Int log(OR)","BPI Pain Int SE")
+jtresults_sub1 <- matrix(c(jtbingeres1,jtbingeres2,jtauditres1,jtauditres2),byrow=TRUE,ncol=4,nrow=2)
+rownames(jtresults_sub1) <- c("Binge drinking","AUDIT-C Problematic drinking")
+colnames(jtresults_sub1) <- c("BPI Pain Score log(OR)","BPI Pain Score SE","BPI Pain Int log(OR)","BPI Pain Int SE")
 
-save(jtresults2,file=paste0(cloudstor,"PhD/Paper 6 - POINT application/Results/jtresults2.RData"))
+save(jtresults_sub1,file=paste0(cloudstor,"PhD/Paper 6 - POINT application/Results/jtresults_sub1.RData"))
+
