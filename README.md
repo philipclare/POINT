@@ -6,7 +6,7 @@ This repository contains R code used in the TMLE analysis of POINT data on the e
 | Description | R-code |
 | --- | --- |
 | P1 - Multiple imputation | [Multiple imputation code](Code/P1_multiple_imputation.R) |
-| P2 - Longitudinal sample descriptives (article Table 2) | [Final data creation code](Code/P2_descriptives.R) |
+| P2 - Longitudinal sample descriptives (article Table 2) | [Longitudinal descriptives code](Code/P2_descriptives.R) |
 | P3 - LTMLE primary analysis of alcohol consumption on pain using the package 'ltmle' (1). | [LTMLE analysis code](Code/P3_ltmle_primary_analysis.R) |
 | P4 - LTMLE secondary analysis of binge/hazardous drinking on pain among drinkers | [LTMLE secondary analysis code](Code/P4_ltmle_secondary_analysis.R) |
 | P5 - LTMLE sensitivity analysis excluding ex-drinkers | [LTMLE sensitivity analysis code](Code/P5_ltmle_sensitivity_analysis.R) |
