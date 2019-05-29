@@ -385,4 +385,3 @@ rownames(riresults) <- c("2+ drinks per week","4+ drinks per week","Binge drinki
 colnames(riresults) <- c("BPI Pain Score log(OR)","BPI Pain Score SE","BPI Pain Int log(OR)","BPI Pain Int SE")
 
 save(riresults,file=paste0(cloudstor,"PhD/Paper 6 - POINT application/Results/riresults.RData"))
-
