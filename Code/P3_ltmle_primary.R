@@ -305,5 +305,3 @@ colnames(cdresults) <- c("BPI Pain Score d","BPI Pain Score d SE","BPI Pain Int 
 
 save(jtresults,file=paste0(cloudstor,"PhD/Paper 6 - POINT application/Results/jtresults.RData"))
 save(cdresults,file=paste0(cloudstor,"PhD/Paper 6 - POINT application/Results/cdresults.RData"))
-
-
