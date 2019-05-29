@@ -278,12 +278,12 @@ rm(list=c("jtaudit1","jtauditco1","jtauditse1","jtaudittco1","jtaudittse1","jtau
           "jtaudit2","jtauditco2","jtauditse2","jtaudittco2","jtaudittse2","jtauditcco2","jtauditcse2","dataauditprob2"))
 
 ## COMBINE RESULTS INTO MATRIX FOR EXCEL ##
-jtresults <- matrix(c(jtalcuseres1a[1:2],jtalcuseres2a[1:2],jtalcuseres1b[1:2],jtalcuseres2b[1:2],jtbingeres1[1:2],jtbingeres2[1:2],jtauditres1[1:2],jtauditres2[1:2]),byrow=TRUE,ncol=4,nrow=3)
+jtresults <- matrix(c(jtalcuseres1a[1:2],jtalcuseres2a[1:2],jtalcuseres1b[1:2],jtalcuseres2b[1:2],jtbingeres1[1:2],jtbingeres2[1:2],jtauditres1[1:2],jtauditres2[1:2]),byrow=TRUE,ncol=4,nrow=4)
 rownames(jtresults) <- c("Drinking 2+ per week","Drinking 4+ times per week","Binge drinking","AUDIT-C Problematic drinking")
 colnames(jtresults) <- c("BPI Pain Score coef","BPI Pain Score SE","BPI Pain Int coef","BPI Pain Int SE")
 
 # Cohen's d results
-cdresults <- matrix(rep(NA,12),ncol=4,nrow=3)
+cdresults <- matrix(rep(NA,12),ncol=4,nrow=4)
 cdresults[1,1] <- smd(Mean.1=jtalcuseres1a[3],s.1=jtalcuseres1a[4]*sqrt(1514),n.1=1514,Mean.2=jtalcuseres1a[5],s.2=jtalcuseres1a[6]*sqrt(1514),n.2=1514)
 cdresults[1,2] <- sqrt(((3028/2292196)+(cdresults[1,1]^2/6052))*(3028/3026))
 cdresults[1,3] <- smd(Mean.1=jtalcuseres2a[3],s.1=jtalcuseres2a[4]*sqrt(1514),n.1=1514,Mean.2=jtalcuseres2a[5],s.2=jtalcuseres2a[6]*sqrt(1514),n.2=1514)
