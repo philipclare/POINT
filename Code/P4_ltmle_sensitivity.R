@@ -42,25 +42,25 @@ parallel::clusterEvalQ(cl, SLlib <- list(Q=c("SL.mean","SL.glm","SL.gam"),
 
 ## 2+ DRINKS PER WEEK ##
 dataalcuse1a <- lapply(impdatawide, function (x) {
-  x$alcpain <- alc_pain_12m1 + alc_pain_12m2 + alc_pain_12m3 + alc_pain_12m4 + alc_pain_12m5 + alc_pain_12m6
+  x$alcpain <- x$alc_pain_12m2 + x$alc_pain_12m3 + x$alc_pain_12m4 + x$alc_pain_12m5 + x$alc_pain_12m6
   x <- subset(x, select = -c(b_alc_ever,
                              freq21,freq22,freq23,freq24,freq25,freq26,
                              binge1,binge2,binge3,binge4,binge5,binge6,
                              auditcprob1,auditcprob2,auditcprob3,auditcprob4,auditcprob5,auditcprob6,
                              BPI_interference1,BPI_interference2,BPI_interference3,BPI_interference4,BPI_interference5,BPI_interference6))
   x <- x[!(x$alcpain>0),]
-  x <- subset(x, select = -c(b_alc_ever,alcpain,alc_pain_12m1,alc_pain_12m2,alc_pain_12m3,alc_pain_12m4,alc_pain_12m5,alc_pain_12m6))
+  x <- subset(x, select = -c(alcpain,alc_pain_12m1,alc_pain_12m2,alc_pain_12m3,alc_pain_12m4,alc_pain_12m5,alc_pain_12m6))
   x
 })
 dataalcuse2a <- lapply(impdatawide, function (x) {
-  x$alcpain <- alc_pain_12m1 + alc_pain_12m2 + alc_pain_12m3 + alc_pain_12m4 + alc_pain_12m5 + alc_pain_12m6
+  x$alcpain <- x$alc_pain_12m2 + x$alc_pain_12m3 + x$alc_pain_12m4 + x$alc_pain_12m5 + x$alc_pain_12m6
   x <- subset(x, select = -c(b_alc_ever,
                              freq21,freq22,freq23,freq24,freq25,freq26,
                              binge1,binge2,binge3,binge4,binge5,binge6,
                              auditcprob1,auditcprob2,auditcprob3,auditcprob4,auditcprob5,auditcprob6,
                              BPI_PScore1,BPI_PScore2,BPI_PScore3,BPI_PScore4,BPI_PScore5,BPI_PScore6))
   x <- x[!(x$alcpain>0),]
-  x <- subset(x, select = -c(b_alc_ever,alcpain,alc_pain_12m1,alc_pain_12m2,alc_pain_12m3,alc_pain_12m4,alc_pain_12m5,alc_pain_12m6))
+  x <- subset(x, select = -c(alcpain,alc_pain_12m1,alc_pain_12m2,alc_pain_12m3,alc_pain_12m4,alc_pain_12m5,alc_pain_12m6))
   x
 })
 
@@ -106,25 +106,25 @@ rm(list=c("jtalcuse1a","jtalcuseco1a","jtalcusese1a","jtalcusetco1a","jtalcusets
 
 ## 4+ DRINKS PER WEEK ##
 dataalcuse1b <- lapply(impdatawide, function (x) {
-  x$alcpain <- alc_pain_12m1 + alc_pain_12m2 + alc_pain_12m3 + alc_pain_12m4 + alc_pain_12m5 + alc_pain_12m6
+  x$alcpain <- x$alc_pain_12m2 + x$alc_pain_12m3 + x$alc_pain_12m4 + x$alc_pain_12m5 + x$alc_pain_12m6
   x <- subset(x, select = -c(b_alc_ever,
                              freq11,freq12,freq13,freq14,freq15,freq16,
                              binge1,binge2,binge3,binge4,binge5,binge6,
                              auditcprob1,auditcprob2,auditcprob3,auditcprob4,auditcprob5,auditcprob6,
                              BPI_interference1,BPI_interference2,BPI_interference3,BPI_interference4,BPI_interference5,BPI_interference6))
   x <- x[!(x$alcpain>0),]
-  x <- subset(x, select = -c(b_alc_ever,alcpain,alc_pain_12m1,alc_pain_12m2,alc_pain_12m3,alc_pain_12m4,alc_pain_12m5,alc_pain_12m6))
+  x <- subset(x, select = -c(alcpain,alc_pain_12m1,alc_pain_12m2,alc_pain_12m3,alc_pain_12m4,alc_pain_12m5,alc_pain_12m6))
   x
 })
 dataalcuse2b <- lapply(impdatawide, function (x) {
-  x$alcpain <- alc_pain_12m1 + alc_pain_12m2 + alc_pain_12m3 + alc_pain_12m4 + alc_pain_12m5 + alc_pain_12m6
+  x$alcpain <- x$alc_pain_12m2 + x$alc_pain_12m3 + x$alc_pain_12m4 + x$alc_pain_12m5 + x$alc_pain_12m6
   x <- subset(x, select = -c(b_alc_ever,
                              freq11,freq12,freq13,freq14,freq15,freq16,
                              binge1,binge2,binge3,binge4,binge5,binge6,
                              auditcprob1,auditcprob2,auditcprob3,auditcprob4,auditcprob5,auditcprob6,
                              BPI_PScore1,BPI_PScore2,BPI_PScore3,BPI_PScore4,BPI_PScore5,BPI_PScore6))
   x <- x[!(x$alcpain>0),]
-  x <- subset(x, select = -c(b_alc_ever,alcpain,alc_pain_12m1,alc_pain_12m2,alc_pain_12m3,alc_pain_12m4,alc_pain_12m5,alc_pain_12m6))
+  x <- subset(x, select = -c(alcpain,alc_pain_12m1,alc_pain_12m2,alc_pain_12m3,alc_pain_12m4,alc_pain_12m5,alc_pain_12m6))
   x
 })
 
@@ -169,7 +169,7 @@ rm(list=c("jtalcuse1b","jtalcuseco1b","jtalcusese1b","jtalcusetco1b","jtalcusets
 
 ## BINGE DRINKING ANALYSIS ##
 databinge1 <- lapply(impdatawide, function (x) {
-  x$alcpain <- alc_pain_12m1 + alc_pain_12m2 + alc_pain_12m3 + alc_pain_12m4 + alc_pain_12m5 + alc_pain_12m6
+  x$alcpain <- x$alc_pain_12m2 + x$alc_pain_12m3 + x$alc_pain_12m4 + x$alc_pain_12m5 + x$alc_pain_12m6
   x <- subset(x, select = -c(b_alc_ever,
                              freq11,freq12,freq13,freq14,freq15,freq16,
                              freq21,freq22,freq23,freq24,freq25,freq26,
@@ -178,11 +178,11 @@ databinge1 <- lapply(impdatawide, function (x) {
                              PHQ9_Mod_sev1,GADMod2Sev1,Antidepressant_week1,Antipsychotic_week1,benzo_week1,Nonopioid_analgesic_week1,
                              Pregabalin_week1,can_12m1,cig_12m1,opioid901,PSEQ_Score1,alc_pain_12m1))
   x <- x[!(x$alcpain>0),]
-  x <- subset(x, select = -c(b_alc_ever,alcpain,alc_pain_12m1,alc_pain_12m2,alc_pain_12m3,alc_pain_12m4,alc_pain_12m5,alc_pain_12m6))
+  x <- subset(x, select = -c(alcpain,alc_pain_12m1,alc_pain_12m2,alc_pain_12m3,alc_pain_12m4,alc_pain_12m5,alc_pain_12m6))
   x
 })
 databinge2 <- lapply(impdatawide, function (x) {
-  x$alcpain <- alc_pain_12m1 + alc_pain_12m2 + alc_pain_12m3 + alc_pain_12m4 + alc_pain_12m5 + alc_pain_12m6
+  x$alcpain <- x$alc_pain_12m2 + x$alc_pain_12m3 + x$alc_pain_12m4 + x$alc_pain_12m5 + x$alc_pain_12m6
   x <- subset(x, select = -c(b_alc_ever,
                              freq11,freq12,freq13,freq14,freq15,freq16,
                              freq21,freq22,freq23,freq24,freq25,freq26,
@@ -191,7 +191,7 @@ databinge2 <- lapply(impdatawide, function (x) {
                              PHQ9_Mod_sev1,GADMod2Sev1,Antidepressant_week1,Antipsychotic_week1,benzo_week1,Nonopioid_analgesic_week1,
                              Pregabalin_week1,can_12m1,cig_12m1,opioid901,PSEQ_Score1,alc_pain_12m1))
   x <- x[!(x$alcpain>0),]
-  x <- subset(x, select = -c(b_alc_ever,alcpain,alc_pain_12m1,alc_pain_12m2,alc_pain_12m3,alc_pain_12m4,alc_pain_12m5,alc_pain_12m6))
+  x <- subset(x, select = -c(alcpain,alc_pain_12m1,alc_pain_12m2,alc_pain_12m3,alc_pain_12m4,alc_pain_12m5,alc_pain_12m6))
   x
 })
 
@@ -236,7 +236,7 @@ rm(list=c("jtbinge1","jtbingeco1","jtbingese1","jtbingetco1","jtbingetse1","jtbi
 
 ## AUDIT PROBLEMATIC DRINKING ANALYSIS ##
 dataauditprob1 <- lapply(impdatawide, function (x) {
-  x$alcpain <- alc_pain_12m1 + alc_pain_12m2 + alc_pain_12m3 + alc_pain_12m4 + alc_pain_12m5 + alc_pain_12m6
+  x$alcpain <- x$alc_pain_12m2 + x$alc_pain_12m3 + x$alc_pain_12m4 + x$alc_pain_12m5 + x$alc_pain_12m6
   x <- subset(x, select = -c(b_alc_ever,
                              freq11,freq12,freq13,freq14,freq15,freq16,
                              freq21,freq22,freq23,freq24,freq25,freq26,
@@ -245,11 +245,11 @@ dataauditprob1 <- lapply(impdatawide, function (x) {
                              PHQ9_Mod_sev1,GADMod2Sev1,Antidepressant_week1,Antipsychotic_week1,benzo_week1,Nonopioid_analgesic_week1,
                              Pregabalin_week1,can_12m1,cig_12m1,opioid901,PSEQ_Score1,alc_pain_12m1))
   x <- x[!(x$alcpain>0),]
-  x <- subset(x, select = -c(b_alc_ever,alcpain,alc_pain_12m1,alc_pain_12m2,alc_pain_12m3,alc_pain_12m4,alc_pain_12m5,alc_pain_12m6))
+  x <- subset(x, select = -c(alcpain,alc_pain_12m1,alc_pain_12m2,alc_pain_12m3,alc_pain_12m4,alc_pain_12m5,alc_pain_12m6))
   x
 })
 dataauditprob2 <- lapply(impdatawide, function (x) {
-  x$alcpain <- alc_pain_12m1 + alc_pain_12m2 + alc_pain_12m3 + alc_pain_12m4 + alc_pain_12m5 + alc_pain_12m6
+  x$alcpain <- x$alc_pain_12m2 + x$alc_pain_12m3 + x$alc_pain_12m4 + x$alc_pain_12m5 + x$alc_pain_12m6
   x <- subset(x, select = -c(b_alc_ever,
                              freq11,freq12,freq13,freq14,freq15,freq16,
                              freq21,freq22,freq23,freq24,freq25,freq26,
@@ -258,7 +258,7 @@ dataauditprob2 <- lapply(impdatawide, function (x) {
                              PHQ9_Mod_sev1,GADMod2Sev1,Antidepressant_week1,Antipsychotic_week1,benzo_week1,Nonopioid_analgesic_week1,
                              Pregabalin_week1,can_12m1,cig_12m1,opioid901,PSEQ_Score1,alc_pain_12m1))
   x <- x[!(x$alcpain>0),]
-  x <- subset(x, select = -c(b_alc_ever,alcpain,alc_pain_12m1,alc_pain_12m2,alc_pain_12m3,alc_pain_12m4,alc_pain_12m5,alc_pain_12m6))
+  x <- subset(x, select = -c(alcpain,alc_pain_12m1,alc_pain_12m2,alc_pain_12m3,alc_pain_12m4,alc_pain_12m5,alc_pain_12m6))
   x
 })
 
@@ -307,6 +307,3 @@ rownames(sensresults) <- c("Drinking 2+ per week","Drinking 4+ times per week","
 colnames(sensresults) <- c("BPI Pain Score coef","BPI Pain Score SE","BPI Pain Int coef","BPI Pain Int SE")
 
 save(sensresults,file=paste0(cloudstor,"PhD/Paper 6 - POINT application/Results/sensresults.RData"))
-
-
-
