@@ -1,5 +1,5 @@
 
-## SYNTAX FILE 7 - E-VALUE ANALYSIS                          ##
+## SYNTAX FILE 6 - E-VALUE ANALYSIS                          ##
 
 cloudstor <- "C:/Users/z3312911/Cloudstor/" # change to master file path
 .libPaths(paste0(cloudstor,"R Library"))
@@ -23,8 +23,11 @@ e4 <- evalues.MD(est=cdresults[2,3], se=cdresults[2,4])
 e5 <- evalues.MD(est=cdresults[3,1], se=cdresults[3,2])
 e6 <- evalues.MD(est=cdresults[3,3], se=cdresults[3,4])
 
-evalue <- matrix(c(e1[2,1],e2[2,1],e3[2,1],e4[2,1],e5[2,1],e6[2,1]),byrow=TRUE,ncol=2,nrow=3)
-rownames(evalue) <- c("Any alcohol consumption","Binge drinking","AUDIT-C Problematic drinking")
+e7 <- evalues.MD(est=cdresults[4,1], se=cdresults[4,2])
+e8 <- evalues.MD(est=cdresults[4,3], se=cdresults[4,4])
+
+evalue <- matrix(c(e1[2,1],e2[2,1],e3[2,1],e4[2,1],e5[2,1],e6[2,1],e7[2,1],e8[2,1]),byrow=TRUE,ncol=2,nrow=4)
+rownames(evalue) <- c("2+ drinks per week","4+ drinks per week","Binge drinking","AUDIT-C Problematic drinking")
 colnames(evalue) <- c("Pain Severity","Pain Interference")
 
 save(evalue,file=paste0(cloudstor,"PhD/Paper 6 - POINT application/Results/evalue.RData"))
