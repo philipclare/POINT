@@ -41,183 +41,190 @@ parallel::clusterEvalQ(cl, SLlib <- list(Q=c("SL.mean","SL.glm","SL.gam"),
                                          g=c("SL.mean","SL.glm","SL.gam","SL.ranger_1")))
 
 ## 2+ DRINKS PER WEEK ##
-dataalcuse1a <- lapply(impdatawide, function (x) {
+datafreq2a <- lapply(impdatawide, function (x) {
   x <- subset(x, select = -c(b_alc_ever,
                              freq21,freq22,freq23,freq24,freq25,freq26,
                              binge1,binge2,binge3,binge4,binge5,binge6,
-                             auditcprob1,auditcprob2,auditcprob3,auditcprob4,auditcprob5,auditcprob6,
-                             BPI_interference1,BPI_interference2,BPI_interference3,BPI_interference4,BPI_interference5,BPI_interference6))
+                             hazardcprob1,hazardcprob2,hazardcprob3,hazardcprob4,hazardcprob5,hazardcprob6,
+                             BPI_interference1,BPI_interference2,BPI_interference3,BPI_interference4,BPI_interference5,BPI_interference6,
+                             PHQ9_Mod_sev1,GADMod2Sev1,Antidepressant_week1,Antipsychotic_week1,benzo_week1,Nonopioid_analgesic_week1,
+                             Pregabalin_week1,can_12m1,cig_12m1,opioid901,PSEQ_Score1,alc_pain_12m1))
   x
 })
-dataalcuse2a <- lapply(impdatawide, function (x) {
+datafreq2b <- lapply(impdatawide, function (x) {
   x <- subset(x, select = -c(b_alc_ever,
                              freq21,freq22,freq23,freq24,freq25,freq26,
                              binge1,binge2,binge3,binge4,binge5,binge6,
-                             auditcprob1,auditcprob2,auditcprob3,auditcprob4,auditcprob5,auditcprob6,
-                             BPI_PScore1,BPI_PScore2,BPI_PScore3,BPI_PScore4,BPI_PScore5,BPI_PScore6))
+                             hazardcprob1,hazardcprob2,hazardcprob3,hazardcprob4,hazardcprob5,hazardcprob6,
+                             BPI_PScore1,BPI_PScore2,BPI_PScore3,BPI_PScore4,BPI_PScore5,BPI_PScore6,
+                             PHQ9_Mod_sev1,GADMod2Sev1,Antidepressant_week1,Antipsychotic_week1,benzo_week1,Nonopioid_analgesic_week1,
+                             Pregabalin_week1,can_12m1,cig_12m1,opioid901,PSEQ_Score1,alc_pain_12m1))
   x
 })
 
-jtalcuse1a <- parLapply(cl=cl, dataalcuse1a, function (x) {ltmle(x,
+jtfreq2a <- parLapply(cl=cl, datafreq2a, function (x) {ltmle(x,
                                                              Anodes=c("freq12","freq13","freq14","freq15","freq16"),
                                                              Lnodes=Lvars2,
                                                              Ynodes=c("BPI_PScore2","BPI_PScore3","BPI_PScore4","BPI_PScore5","BPI_PScore6"),
                                                              survivalOutcome=FALSE,
                                                              SL.library=SLlib,
                                                              abar=list(c(1,1,1,1,1),c(0,0,0,0,0)))})
-jtalcuseres1a <- parLapply(cl=cl, jtalcuse1a, function (x) {summary(x)})
-jtalcuseco1a <- matrix(unlist(parLapply(cl=cl, jtalcuseres1a, function (x) {x$effect.measures$ATE$estimate})),nrow=nimpute,ncol=1)
-jtalcusese1a <- matrix(unlist(parLapply(cl=cl, jtalcuseres1a, function (x) {x$effect.measures$ATE$std.dev})),nrow=nimpute,ncol=1)
-jtalcusetco1a <- matrix(unlist(parLapply(cl=cl, jtalcuseres1a, function (x) {x$effect.measures$treatment$estimate})),nrow=nimpute,ncol=1)
-jtalcusetse1a <- matrix(unlist(parLapply(cl=cl, jtalcuseres1a, function (x) {x$effect.measures$treatment$std.dev})),nrow=nimpute,ncol=1)
-jtalcusecco1a <- matrix(unlist(parLapply(cl=cl, jtalcuseres1a, function (x) {x$effect.measures$control$estimate})),nrow=nimpute,ncol=1)
-jtalcusecse1a <- matrix(unlist(parLapply(cl=cl, jtalcuseres1a, function (x) {x$effect.measures$control$std.dev})),nrow=nimpute,ncol=1)
-jtalcuseres1a <- matrix(c(unlist(mi.meld(q=jtalcuseco1a,se=jtalcusese1a)),
-                  unlist(mi.meld(q=jtalcusetco1a,se=jtalcusese1a)),
-                  unlist(mi.meld(q=jtalcusecco1a,se=jtalcusecse1a))),nrow=1,ncol=6)
+jtfreq2resa <- parLapply(cl=cl, jtfreq2a, function (x) {summary(x)})
+jtfreq2coa <- matrix(unlist(parLapply(cl=cl, jtfreq2resa, function (x) {x$effect.measures$ATE$estimate})),nrow=nimpute,ncol=1)
+jtfreq2sea <- matrix(unlist(parLapply(cl=cl, jtfreq2resa, function (x) {x$effect.measures$ATE$std.dev})),nrow=nimpute,ncol=1)
+jtfreq2tcoa <- matrix(unlist(parLapply(cl=cl, jtfreq2resa, function (x) {x$effect.measures$treatment$estimate})),nrow=nimpute,ncol=1)
+jtfreq2tsea <- matrix(unlist(parLapply(cl=cl, jtfreq2resa, function (x) {x$effect.measures$treatment$std.dev})),nrow=nimpute,ncol=1)
+jtfreq2ccoa <- matrix(unlist(parLapply(cl=cl, jtfreq2resa, function (x) {x$effect.measures$control$estimate})),nrow=nimpute,ncol=1)
+jtfreq2csea <- matrix(unlist(parLapply(cl=cl, jtfreq2resa, function (x) {x$effect.measures$control$std.dev})),nrow=nimpute,ncol=1)
+jtfreq2resa <- matrix(c(unlist(mi.meld(q=jtfreq2coa,se=jtfreq2sea)),
+                  unlist(mi.meld(q=jtfreq2tcoa,se=jtfreq2sea)),
+                  unlist(mi.meld(q=jtfreq2ccoa,se=jtfreq2csea))),nrow=1,ncol=6)
 
-
-jtalcuse2a <- parLapply(cl=cl, dataalcuse2a, function (x) {ltmle(x,
+jtfreq2b <- parLapply(cl=cl, datafreq2b, function (x) {ltmle(x,
                                                              Anodes=c("freq12","freq13","freq14","freq15","freq16"),
                                                              Lnodes=Lvars2,
                                                              Ynodes=c("BPI_interference2","BPI_interference3","BPI_interference4","BPI_interference5","BPI_interference6"),
                                                              survivalOutcome=FALSE,
                                                              SL.library=SLlib,
                                                              abar=list(c(1,1,1,1,1),c(0,0,0,0,0)))})
-jtalcuseres2a <- parLapply(cl=cl, jtalcuse2a, function (x) {summary(x)})
-jtalcuseco2a <- matrix(unlist(parLapply(cl=cl, jtalcuseres2a, function (x) {x$effect.measures$ATE$estimate})),nrow=nimpute,ncol=1)
-jtalcusese2a <- matrix(unlist(parLapply(cl=cl, jtalcuseres2a, function (x) {x$effect.measures$ATE$std.dev})),nrow=nimpute,ncol=1)
-jtalcusetco2a <- matrix(unlist(parLapply(cl=cl, jtalcuseres2a, function (x) {x$effect.measures$treatment$estimate})),nrow=nimpute,ncol=1)
-jtalcusetse2a <- matrix(unlist(parLapply(cl=cl, jtalcuseres2a, function (x) {x$effect.measures$treatment$std.dev})),nrow=nimpute,ncol=1)
-jtalcusecco2a <- matrix(unlist(parLapply(cl=cl, jtalcuseres2a, function (x) {x$effect.measures$control$estimate})),nrow=nimpute,ncol=1)
-jtalcusecse2a <- matrix(unlist(parLapply(cl=cl, jtalcuseres2a, function (x) {x$effect.measures$control$std.dev})),nrow=nimpute,ncol=1)
-jtalcuseres2a <- matrix(c(unlist(mi.meld(q=jtalcuseco2a,se=jtalcusese2a)),
-                         unlist(mi.meld(q=jtalcusetco2a,se=jtalcusese2a)),
-                         unlist(mi.meld(q=jtalcusecco2a,se=jtalcusecse2a))),nrow=1,ncol=6)
+jtfreq2resb <- parLapply(cl=cl, jtfreq2b, function (x) {summary(x)})
+jtfreq2cob <- matrix(unlist(parLapply(cl=cl, jtfreq2resb, function (x) {x$effect.measures$ATE$estimate})),nrow=nimpute,ncol=1)
+jtfreq2seb <- matrix(unlist(parLapply(cl=cl, jtfreq2resb, function (x) {x$effect.measures$ATE$std.dev})),nrow=nimpute,ncol=1)
+jtfreq2tcob <- matrix(unlist(parLapply(cl=cl, jtfreq2resb, function (x) {x$effect.measures$treatment$estimate})),nrow=nimpute,ncol=1)
+jtfreq2tseb <- matrix(unlist(parLapply(cl=cl, jtfreq2resb, function (x) {x$effect.measures$treatment$std.dev})),nrow=nimpute,ncol=1)
+jtfreq2ccob <- matrix(unlist(parLapply(cl=cl, jtfreq2resb, function (x) {x$effect.measures$control$estimate})),nrow=nimpute,ncol=1)
+jtfreq2cseb <- matrix(unlist(parLapply(cl=cl, jtfreq2resb, function (x) {x$effect.measures$control$std.dev})),nrow=nimpute,ncol=1)
+jtfreq2resb <- matrix(c(unlist(mi.meld(q=jtfreq2cob,se=jtfreq2seb)),
+                         unlist(mi.meld(q=jtfreq2tcob,se=jtfreq2seb)),
+                         unlist(mi.meld(q=jtfreq2ccob,se=jtfreq2cseb))),nrow=1,ncol=6)
 
-rm(list=c("jtalcuse1a","jtalcuseco1a","jtalcusese1a","jtalcusetco1a","jtalcusetse1a","jtalcusecco1a","jtalcusecse1a","dataalcuse1a",
-          "jtalcuse2a","jtalcuseco2a","jtalcusese2a","jtalcusetco2a","jtalcusetse2a","jtalcusecco2a","jtalcusecse2a","dataalcuse2a"))
+rm(list=c("jtfreq2a","jtfreq2coa","jtfreq2sea","jtfreq2tcoa","jtfreq2tsea","jtfreq2ccoa","jtfreq2csea","datafreq2a",
+          "jtfreq2b","jtfreq2coa","jtfreq2sea","jtfreq2tcoa","jtfreq2tsea","jtfreq2ccoa","jtfreq2csea","datafreq2b"))
 
 ## 4+ DRINKS PER WEEK ##
-dataalcuse1b <- lapply(impdatawide, function (x) {
+datafreq4a <- lapply(impdatawide, function (x) {
   x <- subset(x, select = -c(b_alc_ever,
                              freq11,freq12,freq13,freq14,freq15,freq16,
                              binge1,binge2,binge3,binge4,binge5,binge6,
-                             auditcprob1,auditcprob2,auditcprob3,auditcprob4,auditcprob5,auditcprob6,
-                             BPI_interference1,BPI_interference2,BPI_interference3,BPI_interference4,BPI_interference5,BPI_interference6))
-  x
-})
-dataalcuse2b <- lapply(impdatawide, function (x) {
-  x <- subset(x, select = -c(b_alc_ever,
-                             freq11,freq12,freq13,freq14,freq15,freq16,
-                             binge1,binge2,binge3,binge4,binge5,binge6,
-                             auditcprob1,auditcprob2,auditcprob3,auditcprob4,auditcprob5,auditcprob6,
-                             BPI_PScore1,BPI_PScore2,BPI_PScore3,BPI_PScore4,BPI_PScore5,BPI_PScore6))
-  x
-})
-
-jtalcuse1b <- parLapply(cl=cl, dataalcuse1b, function (x) {ltmle(x,
-                                                                 Anodes=c("freq22","freq23","freq24","freq25","freq26"),
-                                                                 Lnodes=Lvars2,
-                                                                 Ynodes=c("BPI_PScore2","BPI_PScore3","BPI_PScore4","BPI_PScore5","BPI_PScore6"),
-                                                                 survivalOutcome=FALSE,
-                                                                 SL.library=SLlib,
-                                                                 abar=list(c(1,1,1,1,1),c(0,0,0,0,0)))})
-jtalcuseres1b <- parLapply(cl=cl, jtalcuse1b, function (x) {summary(x)})
-jtalcuseco1b <- matrix(unlist(parLapply(cl=cl, jtalcuseres1b, function (x) {x$effect.measures$ATE$estimate})),nrow=nimpute,ncol=1)
-jtalcusese1b <- matrix(unlist(parLapply(cl=cl, jtalcuseres1b, function (x) {x$effect.measures$ATE$std.dev})),nrow=nimpute,ncol=1)
-jtalcusetco1b <- matrix(unlist(parLapply(cl=cl, jtalcuseres1b, function (x) {x$effect.measures$treatment$estimate})),nrow=nimpute,ncol=1)
-jtalcusetse1b <- matrix(unlist(parLapply(cl=cl, jtalcuseres1b, function (x) {x$effect.measures$treatment$std.dev})),nrow=nimpute,ncol=1)
-jtalcusecco1b <- matrix(unlist(parLapply(cl=cl, jtalcuseres1b, function (x) {x$effect.measures$control$estimate})),nrow=nimpute,ncol=1)
-jtalcusecse1b <- matrix(unlist(parLapply(cl=cl, jtalcuseres1b, function (x) {x$effect.measures$control$std.dev})),nrow=nimpute,ncol=1)
-jtalcuseres1b <- matrix(c(unlist(mi.meld(q=jtalcuseco1b,se=jtalcusese1b)),
-                          unlist(mi.meld(q=jtalcusetco1b,se=jtalcusese1b)),
-                          unlist(mi.meld(q=jtalcusecco1b,se=jtalcusecse1b))),nrow=1,ncol=6)
-
-jtalcuse2b <- parLapply(cl=cl, dataalcuse2b, function (x) {ltmle(x,
-                                                                 Anodes=c("freq22","freq23","freq24","freq25","freq26"),
-                                                                 Lnodes=Lvars2,
-                                                                 Ynodes=c("BPI_interference2","BPI_interference3","BPI_interference4","BPI_interference5","BPI_interference6"),
-                                                                 survivalOutcome=FALSE,
-                                                                 SL.library=SLlib,
-                                                                 abar=list(c(1,1,1,1,1),c(0,0,0,0,0)))})
-jtalcuseres2b <- parLapply(cl=cl, jtalcuse2b, function (x) {summary(x)})
-jtalcuseco2b <- matrix(unlist(parLapply(cl=cl, jtalcuseres2b, function (x) {x$effect.measures$ATE$estimate})),nrow=nimpute,ncol=1)
-jtalcusese2b <- matrix(unlist(parLapply(cl=cl, jtalcuseres2b, function (x) {x$effect.measures$ATE$std.dev})),nrow=nimpute,ncol=1)
-jtalcusetco2b <- matrix(unlist(parLapply(cl=cl, jtalcuseres2b, function (x) {x$effect.measures$treatment$estimate})),nrow=nimpute,ncol=1)
-jtalcusetse2b <- matrix(unlist(parLapply(cl=cl, jtalcuseres2b, function (x) {x$effect.measures$treatment$std.dev})),nrow=nimpute,ncol=1)
-jtalcusecco2b <- matrix(unlist(parLapply(cl=cl, jtalcuseres2b, function (x) {x$effect.measures$control$estimate})),nrow=nimpute,ncol=1)
-jtalcusecse2b <- matrix(unlist(parLapply(cl=cl, jtalcuseres2b, function (x) {x$effect.measures$control$std.dev})),nrow=nimpute,ncol=1)
-jtalcuseres2b <- matrix(c(unlist(mi.meld(q=jtalcuseco2b,se=jtalcusese2b)),
-                          unlist(mi.meld(q=jtalcusetco2b,se=jtalcusese2b)),
-                          unlist(mi.meld(q=jtalcusecco2b,se=jtalcusecse2b))),nrow=1,ncol=6)
-
-rm(list=c("jtalcuse1b","jtalcuseco1b","jtalcusese1b","jtalcusetco1b","jtalcusetse1b","jtalcusecco1b","jtalcusecse1b","dataalcuse1b",
-          "jtalcuse2b","jtalcuseco2b","jtalcusese2b","jtalcusetco2b","jtalcusetse2b","jtalcusecco2b","jtalcusecse2b","dataalcuse2b"))
-
-## BINGE DRINKING ANALYSIS ##
-databinge1 <- lapply(impdatawide, function (x) {
-  x <- subset(x, select = -c(b_alc_ever,
-                             freq11,freq12,freq13,freq14,freq15,freq16,
-                             freq21,freq22,freq23,freq24,freq25,freq26,
-                             auditcprob1,auditcprob2,auditcprob3,auditcprob4,auditcprob5,auditcprob6,
+                             hazardcprob1,hazardcprob2,hazardcprob3,hazardcprob4,hazardcprob5,hazardcprob6,
                              BPI_interference1,BPI_interference2,BPI_interference3,BPI_interference4,BPI_interference5,BPI_interference6,
                              PHQ9_Mod_sev1,GADMod2Sev1,Antidepressant_week1,Antipsychotic_week1,benzo_week1,Nonopioid_analgesic_week1,
                              Pregabalin_week1,can_12m1,cig_12m1,opioid901,PSEQ_Score1,alc_pain_12m1))
   x
 })
-databinge2 <- lapply(impdatawide, function (x) {
+datafreq4b <- lapply(impdatawide, function (x) {
   x <- subset(x, select = -c(b_alc_ever,
                              freq11,freq12,freq13,freq14,freq15,freq16,
-                             freq21,freq22,freq23,freq24,freq25,freq26,
-                             auditcprob1,auditcprob2,auditcprob3,auditcprob4,auditcprob5,auditcprob6,
+                             binge1,binge2,binge3,binge4,binge5,binge6,
+                             hazardcprob1,hazardcprob2,hazardcprob3,hazardcprob4,hazardcprob5,hazardcprob6,
                              BPI_PScore1,BPI_PScore2,BPI_PScore3,BPI_PScore4,BPI_PScore5,BPI_PScore6,
                              PHQ9_Mod_sev1,GADMod2Sev1,Antidepressant_week1,Antipsychotic_week1,benzo_week1,Nonopioid_analgesic_week1,
                              Pregabalin_week1,can_12m1,cig_12m1,opioid901,PSEQ_Score1,alc_pain_12m1))
   x
 })
 
-jtbinge1 <- parLapply(cl=cl, databinge1, function (x) {ltmle(x,
+jtfreq4a <- parLapply(cl=cl, datafreq4a, function (x) {ltmle(x,
+                                                             Anodes=c("freq12","freq13","freq14","freq15","freq16"),
+                                                             Lnodes=Lvars2,
+                                                             Ynodes=c("BPI_PScore2","BPI_PScore3","BPI_PScore4","BPI_PScore5","BPI_PScore6"),
+                                                             survivalOutcome=FALSE,
+                                                             SL.library=SLlib,
+                                                             abar=list(c(1,1,1,1,1),c(0,0,0,0,0)))})
+jtfreq4resa <- parLapply(cl=cl, jtfreq4a, function (x) {summary(x)})
+jtfreq4coa <- matrix(unlist(parLapply(cl=cl, jtfreq4resa, function (x) {x$effect.measures$ATE$estimate})),nrow=nimpute,ncol=1)
+jtfreq4sea <- matrix(unlist(parLapply(cl=cl, jtfreq4resa, function (x) {x$effect.measures$ATE$std.dev})),nrow=nimpute,ncol=1)
+jtfreq4tcoa <- matrix(unlist(parLapply(cl=cl, jtfreq4resa, function (x) {x$effect.measures$treatment$estimate})),nrow=nimpute,ncol=1)
+jtfreq4tsea <- matrix(unlist(parLapply(cl=cl, jtfreq4resa, function (x) {x$effect.measures$treatment$std.dev})),nrow=nimpute,ncol=1)
+jtfreq4ccoa <- matrix(unlist(parLapply(cl=cl, jtfreq4resa, function (x) {x$effect.measures$control$estimate})),nrow=nimpute,ncol=1)
+jtfreq4csea <- matrix(unlist(parLapply(cl=cl, jtfreq4resa, function (x) {x$effect.measures$control$std.dev})),nrow=nimpute,ncol=1)
+jtfreq4resa <- matrix(c(unlist(mi.meld(q=jtfreq4coa,se=jtfreq4sea)),
+                        unlist(mi.meld(q=jtfreq4tcoa,se=jtfreq4sea)),
+                        unlist(mi.meld(q=jtfreq4ccoa,se=jtfreq4csea))),nrow=1,ncol=6)
+
+jtfreq4b <- parLapply(cl=cl, datafreq4b, function (x) {ltmle(x,
+                                                             Anodes=c("freq12","freq13","freq14","freq15","freq16"),
+                                                             Lnodes=Lvars2,
+                                                             Ynodes=c("BPI_interference2","BPI_interference3","BPI_interference4","BPI_interference5","BPI_interference6"),
+                                                             survivalOutcome=FALSE,
+                                                             SL.library=SLlib,
+                                                             abar=list(c(1,1,1,1,1),c(0,0,0,0,0)))})
+jtfreq4resb <- parLapply(cl=cl, jtfreq4b, function (x) {summary(x)})
+jtfreq4cob <- matrix(unlist(parLapply(cl=cl, jtfreq4resb, function (x) {x$effect.measures$ATE$estimate})),nrow=nimpute,ncol=1)
+jtfreq4seb <- matrix(unlist(parLapply(cl=cl, jtfreq4resb, function (x) {x$effect.measures$ATE$std.dev})),nrow=nimpute,ncol=1)
+jtfreq4tcob <- matrix(unlist(parLapply(cl=cl, jtfreq4resb, function (x) {x$effect.measures$treatment$estimate})),nrow=nimpute,ncol=1)
+jtfreq4tseb <- matrix(unlist(parLapply(cl=cl, jtfreq4resb, function (x) {x$effect.measures$treatment$std.dev})),nrow=nimpute,ncol=1)
+jtfreq4ccob <- matrix(unlist(parLapply(cl=cl, jtfreq4resb, function (x) {x$effect.measures$control$estimate})),nrow=nimpute,ncol=1)
+jtfreq4cseb <- matrix(unlist(parLapply(cl=cl, jtfreq4resb, function (x) {x$effect.measures$control$std.dev})),nrow=nimpute,ncol=1)
+jtfreq4resb <- matrix(c(unlist(mi.meld(q=jtfreq4cob,se=jtfreq4seb)),
+                        unlist(mi.meld(q=jtfreq4tcob,se=jtfreq4seb)),
+                        unlist(mi.meld(q=jtfreq4ccob,se=jtfreq4cseb))),nrow=1,ncol=6)
+
+rm(list=c("jtfreq4a","jtfreq4coa","jtfreq4sea","jtfreq4tcoa","jtfreq4tsea","jtfreq4ccoa","jtfreq4csea","datafreq4a",
+          "jtfreq4b","jtfreq4cob","jtfreq4seb","jtfreq4tcob","jtfreq4tseb","jtfreq4ccob","jtfreq4cseb","datafreq4b"))
+
+## BINGE DRINKING ANALYSIS ##
+databingea <- lapply(impdatawide, function (x) {
+  x <- subset(x, select = -c(b_alc_ever,
+                             freq11,freq12,freq13,freq14,freq15,freq16,
+                             freq21,freq22,freq23,freq24,freq25,freq26,
+                             hazardcprob1,hazardcprob2,hazardcprob3,hazardcprob4,hazardcprob5,hazardcprob6,
+                             BPI_interference1,BPI_interference2,BPI_interference3,BPI_interference4,BPI_interference5,BPI_interference6,
+                             PHQ9_Mod_sev1,GADMod2Sev1,Antidepressant_week1,Antipsychotic_week1,benzo_week1,Nonopioid_analgesic_week1,
+                             Pregabalin_week1,can_12m1,cig_12m1,opioid901,PSEQ_Score1,alc_pain_12m1))
+  x
+})
+databingeb <- lapply(impdatawide, function (x) {
+  x <- subset(x, select = -c(b_alc_ever,
+                             freq11,freq12,freq13,freq14,freq15,freq16,
+                             freq21,freq22,freq23,freq24,freq25,freq26,
+                             hazardcprob1,hazardcprob2,hazardcprob3,hazardcprob4,hazardcprob5,hazardcprob6,
+                             BPI_PScore1,BPI_PScore2,BPI_PScore3,BPI_PScore4,BPI_PScore5,BPI_PScore6,
+                             PHQ9_Mod_sev1,GADMod2Sev1,Antidepressant_week1,Antipsychotic_week1,benzo_week1,Nonopioid_analgesic_week1,
+                             Pregabalin_week1,can_12m1,cig_12m1,opioid901,PSEQ_Score1,alc_pain_12m1))
+  x
+})
+
+jtbingea <- parLapply(cl=cl, databinge1, function (x) {ltmle(x,
                                                              Anodes=c("binge2","binge3","binge4","binge5","binge6"),
                                                              Lnodes=Lvars2,
                                                              Ynodes=c("BPI_PScore2","BPI_PScore3","BPI_PScore4","BPI_PScore5","BPI_PScore6"),
                                                              survivalOutcome=FALSE,
                                                              SL.library=SLlib,
                                                              abar=list(c(1,1,1,1,1),c(0,0,0,0,0)))})
-jtbingeres1 <- parLapply(cl=cl, jtbinge1, function (x) {summary(x)})
-jtbingeco1 <- matrix(unlist(parLapply(cl=cl, jtbingeres1, function (x) {x$effect.measures$ATE$estimate})),nrow=nimpute,ncol=1)
-jtbingese1 <- matrix(unlist(parLapply(cl=cl, jtbingeres1, function (x) {x$effect.measures$ATE$std.dev})),nrow=nimpute,ncol=1)
-jtbingetco1 <- matrix(unlist(parLapply(cl=cl, jtbingeres1, function (x) {x$effect.measures$treatment$estimate})),nrow=nimpute,ncol=1)
-jtbingetse1 <- matrix(unlist(parLapply(cl=cl, jtbingeres1, function (x) {x$effect.measures$treatment$std.dev})),nrow=nimpute,ncol=1)
-jtbingecco1 <- matrix(unlist(parLapply(cl=cl, jtbingeres1, function (x) {x$effect.measures$control$estimate})),nrow=nimpute,ncol=1)
-jtbingecse1 <- matrix(unlist(parLapply(cl=cl, jtbingeres1, function (x) {x$effect.measures$control$std.dev})),nrow=nimpute,ncol=1)
-jtbingeres1 <- matrix(c(unlist(mi.meld(q=jtbingeco1,se=jtbingese1)),
-                         unlist(mi.meld(q=jtbingetco1,se=jtbingese1)),
-                         unlist(mi.meld(q=jtbingecco1,se=jtbingecse1))),nrow=1,ncol=6)
+jtbingeresa <- parLapply(cl=cl, jtbingea, function (x) {summary(x)})
+jtbingecoa <- matrix(unlist(parLapply(cl=cl, jtbingeresa, function (x) {x$effect.measures$ATE$estimate})),nrow=nimpute,ncol=1)
+jtbingesea <- matrix(unlist(parLapply(cl=cl, jtbingeresa, function (x) {x$effect.measures$ATE$std.dev})),nrow=nimpute,ncol=1)
+jtbingetcoa <- matrix(unlist(parLapply(cl=cl, jtbingeresa, function (x) {x$effect.measures$treatment$estimate})),nrow=nimpute,ncol=1)
+jtbingetsea <- matrix(unlist(parLapply(cl=cl, jtbingeresa, function (x) {x$effect.measures$treatment$std.dev})),nrow=nimpute,ncol=1)
+jtbingeccoa <- matrix(unlist(parLapply(cl=cl, jtbingeresa, function (x) {x$effect.measures$control$estimate})),nrow=nimpute,ncol=1)
+jtbingecsea <- matrix(unlist(parLapply(cl=cl, jtbingeresa, function (x) {x$effect.measures$control$std.dev})),nrow=nimpute,ncol=1)
+jtbingeresa <- matrix(c(unlist(mi.meld(q=jtbingecoa,se=jtbingesea)),
+                         unlist(mi.meld(q=jtbingetcoa,se=jtbingesea)),
+                         unlist(mi.meld(q=jtbingeccoa,se=jtbingecsea))),nrow=1,ncol=6)
 
-jtbinge2 <- parLapply(cl=cl, databinge2, function (x) {ltmle(x,
+jtbingeb <- parLapply(cl=cl, databinge2, function (x) {ltmle(x,
                                                              Anodes=c("binge2","binge3","binge4","binge5","binge6"),
                                                              Lnodes=Lvars2,
                                                              Ynodes=c("BPI_interference2","BPI_interference3","BPI_interference4","BPI_interference5","BPI_interference6"),
                                                              survivalOutcome=FALSE,
                                                              SL.library=SLlib,
                                                              abar=list(c(1,1,1,1,1),c(0,0,0,0,0)))})
-jtbingeres2 <- parLapply(cl=cl, jtbinge2, function (x) {summary(x)})
-jtbingeco2 <- matrix(unlist(parLapply(cl=cl, jtbingeres2, function (x) {x$effect.measures$ATE$estimate})),nrow=nimpute,ncol=1)
-jtbingese2 <- matrix(unlist(parLapply(cl=cl, jtbingeres2, function (x) {x$effect.measures$ATE$std.dev})),nrow=nimpute,ncol=1)
-jtbingetco2 <- matrix(unlist(parLapply(cl=cl, jtbingeres2, function (x) {x$effect.measures$treatment$estimate})),nrow=nimpute,ncol=1)
-jtbingetse2 <- matrix(unlist(parLapply(cl=cl, jtbingeres2, function (x) {x$effect.measures$treatment$std.dev})),nrow=nimpute,ncol=1)
-jtbingecco2 <- matrix(unlist(parLapply(cl=cl, jtbingeres2, function (x) {x$effect.measures$control$estimate})),nrow=nimpute,ncol=1)
-jtbingecse2 <- matrix(unlist(parLapply(cl=cl, jtbingeres2, function (x) {x$effect.measures$control$std.dev})),nrow=nimpute,ncol=1)
-jtbingeres2 <- matrix(c(unlist(mi.meld(q=jtbingeco2,se=jtbingese2)),
-                        unlist(mi.meld(q=jtbingetco2,se=jtbingese2)),
-                        unlist(mi.meld(q=jtbingecco2,se=jtbingecse2))),nrow=1,ncol=6)
+jtbingeresb <- parLapply(cl=cl, jtbinge2, function (x) {summary(x)})
+jtbingecob <- matrix(unlist(parLapply(cl=cl, jtbingeresb, function (x) {x$effect.measures$ATE$estimate})),nrow=nimpute,ncol=1)
+jtbingeseb <- matrix(unlist(parLapply(cl=cl, jtbingeresb, function (x) {x$effect.measures$ATE$std.dev})),nrow=nimpute,ncol=1)
+jtbingetcob <- matrix(unlist(parLapply(cl=cl, jtbingeresb, function (x) {x$effect.measures$treatment$estimate})),nrow=nimpute,ncol=1)
+jtbingetseb <- matrix(unlist(parLapply(cl=cl, jtbingeresb, function (x) {x$effect.measures$treatment$std.dev})),nrow=nimpute,ncol=1)
+jtbingeccob <- matrix(unlist(parLapply(cl=cl, jtbingeresb, function (x) {x$effect.measures$control$estimate})),nrow=nimpute,ncol=1)
+jtbingecseb <- matrix(unlist(parLapply(cl=cl, jtbingeresb, function (x) {x$effect.measures$control$std.dev})),nrow=nimpute,ncol=1)
+jtbingeresb <- matrix(c(unlist(mi.meld(q=jtbingecob,se=jtbingeseb)),
+                        unlist(mi.meld(q=jtbingetcob,se=jtbingeseb)),
+                        unlist(mi.meld(q=jtbingeccob,se=jtbingecseb))),nrow=1,ncol=6)
 
-rm(list=c("jtbinge1","jtbingeco1","jtbingese1","jtbingetco1","jtbingetse1","jtbingecco1","jtbingecse1","databinge1",
-          "jtbinge2","jtbingeco2","jtbingese2","jtbingetco2","jtbingetse2","jtbingecco2","jtbingecse2","databinge2"))
+rm(list=c("jtbingea","jtbingecoa","jtbingesea","jtbingetcoa","jtbingetsea","jtbingeccoa","jtbingecsea","databingea",
+          "jtbingeb","jtbingecob","jtbingeseb","jtbingetcob","jtbingetseb","jtbingeccob","jtbingecseb","databingeb"))
 
-## AUDIT PROBLEMATIC DRINKING ANALYSIS ##
-dataauditprob1 <- lapply(impdatawide, function (x) {
+## hazard PROBLEMATIC DRINKING ANALYSIS ##
+datahazarda <- lapply(impdatawide, function (x) {
   x <- subset(x, select = -c(b_alc_ever,
                              freq11,freq12,freq13,freq14,freq15,freq16,
                              freq21,freq22,freq23,freq24,freq25,freq26,
@@ -227,7 +234,7 @@ dataauditprob1 <- lapply(impdatawide, function (x) {
                              Pregabalin_week1,can_12m1,cig_12m1,opioid901,PSEQ_Score1,alc_pain_12m1))
   x
 })
-dataauditprob2 <- lapply(impdatawide, function (x) {
+datahazardb <- lapply(impdatawide, function (x) {
   x <- subset(x, select = -c(b_alc_ever,
                              freq11,freq12,freq13,freq14,freq15,freq16,
                              freq21,freq22,freq23,freq24,freq25,freq26,
@@ -238,69 +245,70 @@ dataauditprob2 <- lapply(impdatawide, function (x) {
   x
 })
 
-jtaudit1 <- parLapply(cl=cl, dataauditprob1, function (x) {ltmle(x,
-                                                           Anodes=c("auditcprob2","auditcprob3","auditcprob4","auditcprob5","auditcprob6"),
+jthazarda <- parLapply(cl=cl, datahazarda, function (x) {ltmle(x,
+                                                           Anodes=c("hazardcprob2","hazardcprob3","hazardcprob4","hazardcprob5","hazardcprob6"),
                                                            Lnodes=Lvars2,
                                                            Ynodes=c("BPI_PScore2","BPI_PScore3","BPI_PScore4","BPI_PScore5","BPI_PScore6"),
                                                            survivalOutcome=FALSE,
                                                            SL.library=SLlib,
                                                            abar=list(c(1,1,1,1,1),c(0,0,0,0,0)))})
-jtauditres1 <- parLapply(cl=cl, jtaudit1, function (x) {summary(x)})
-jtauditco1 <- matrix(unlist(parLapply(cl=cl, jtauditres1, function (x) {x$effect.measures$ATE$estimate})),nrow=nimpute,ncol=1)
-jtauditse1 <- matrix(unlist(parLapply(cl=cl, jtauditres1, function (x) {x$effect.measures$ATE$std.dev})),nrow=nimpute,ncol=1)
-jtaudittco1 <- matrix(unlist(parLapply(cl=cl, jtauditres1, function (x) {x$effect.measures$treatment$estimate})),nrow=nimpute,ncol=1)
-jtaudittse1 <- matrix(unlist(parLapply(cl=cl, jtauditres1, function (x) {x$effect.measures$treatment$std.dev})),nrow=nimpute,ncol=1)
-jtauditcco1 <- matrix(unlist(parLapply(cl=cl, jtauditres1, function (x) {x$effect.measures$control$estimate})),nrow=nimpute,ncol=1)
-jtauditcse1 <- matrix(unlist(parLapply(cl=cl, jtauditres1, function (x) {x$effect.measures$control$std.dev})),nrow=nimpute,ncol=1)
-jtauditres1 <- matrix(c(unlist(mi.meld(q=jtauditco1,se=jtauditse1)),
-                        unlist(mi.meld(q=jtaudittco1,se=jtauditse1)),
-                        unlist(mi.meld(q=jtauditcco1,se=jtauditcse1))),nrow=1,ncol=6)
+jthazardresa <- parLapply(cl=cl, jthazarda, function (x) {summary(x)})
+jthazardcoa <- matrix(unlist(parLapply(cl=cl, jthazardresa, function (x) {x$effect.measures$ATE$estimate})),nrow=nimpute,ncol=1)
+jthazardsea <- matrix(unlist(parLapply(cl=cl, jthazardresa, function (x) {x$effect.measures$ATE$std.dev})),nrow=nimpute,ncol=1)
+jthazardtcoa <- matrix(unlist(parLapply(cl=cl, jthazardresa, function (x) {x$effect.measures$treatment$estimate})),nrow=nimpute,ncol=1)
+jthazardtsea <- matrix(unlist(parLapply(cl=cl, jthazardresa, function (x) {x$effect.measures$treatment$std.dev})),nrow=nimpute,ncol=1)
+jthazardccoa <- matrix(unlist(parLapply(cl=cl, jthazardresa, function (x) {x$effect.measures$control$estimate})),nrow=nimpute,ncol=1)
+jthazardcsea <- matrix(unlist(parLapply(cl=cl, jthazardresa, function (x) {x$effect.measures$control$std.dev})),nrow=nimpute,ncol=1)
+jthazardresa <- matrix(c(unlist(mi.meld(q=jthazardcoa,se=jthazardsea)),
+                        unlist(mi.meld(q=jthazardtcoa,se=jthazardsea)),
+                        unlist(mi.meld(q=jthazardccoa,se=jthazardcsea))),nrow=1,ncol=6)
 
-jtaudit2 <- parLapply(cl=cl, dataauditprob2, function (x) {ltmle(x,
-                                                             Anodes=c("auditcprob2","auditcprob3","auditcprob4","auditcprob5","auditcprob6"),
+jthazardb <- parLapply(cl=cl, datahazardb, function (x) {ltmle(x,
+                                                             Anodes=c("hazardcprob2","hazardcprob3","hazardcprob4","hazardcprob5","hazardcprob6"),
                                                              Lnodes=Lvars2,
                                                              Ynodes=c("BPI_interference2","BPI_interference3","BPI_interference4","BPI_interference5","BPI_interference6"),
                                                              survivalOutcome=FALSE,
                                                              SL.library=SLlib,
                                                              abar=list(c(1,1,1,1,1),c(0,0,0,0,0)))})
-jtauditres2 <- parLapply(cl=cl, jtaudit2, function (x) {summary(x)})
-jtauditco2 <- matrix(unlist(parLapply(cl=cl, jtauditres2, function (x) {x$effect.measures$ATE$estimate})),nrow=nimpute,ncol=1)
-jtauditse2 <- matrix(unlist(parLapply(cl=cl, jtauditres2, function (x) {x$effect.measures$ATE$std.dev})),nrow=nimpute,ncol=1)
-jtaudittco2 <- matrix(unlist(parLapply(cl=cl, jtauditres2, function (x) {x$effect.measures$treatment$estimate})),nrow=nimpute,ncol=1)
-jtaudittse2 <- matrix(unlist(parLapply(cl=cl, jtauditres2, function (x) {x$effect.measures$treatment$std.dev})),nrow=nimpute,ncol=1)
-jtauditcco2 <- matrix(unlist(parLapply(cl=cl, jtauditres2, function (x) {x$effect.measures$control$estimate})),nrow=nimpute,ncol=1)
-jtauditcse2 <- matrix(unlist(parLapply(cl=cl, jtauditres2, function (x) {x$effect.measures$control$std.dev})),nrow=nimpute,ncol=1)
-jtauditres2 <- matrix(c(unlist(mi.meld(q=jtauditco2,se=jtauditse2)),
-                        unlist(mi.meld(q=jtaudittco2,se=jtauditse2)),
-                        unlist(mi.meld(q=jtauditcco2,se=jtauditcse2))),nrow=1,ncol=6)
+jthazardresb <- parLapply(cl=cl, jthazardb, function (x) {summary(x)})
+jthazardcob <- matrix(unlist(parLapply(cl=cl, jthazardresb, function (x) {x$effect.measures$ATE$estimate})),nrow=nimpute,ncol=1)
+jthazardseb <- matrix(unlist(parLapply(cl=cl, jthazardresb, function (x) {x$effect.measures$ATE$std.dev})),nrow=nimpute,ncol=1)
+jthazardtcob <- matrix(unlist(parLapply(cl=cl, jthazardresb, function (x) {x$effect.measures$treatment$estimate})),nrow=nimpute,ncol=1)
+jthazardtseb <- matrix(unlist(parLapply(cl=cl, jthazardresb, function (x) {x$effect.measures$treatment$std.dev})),nrow=nimpute,ncol=1)
+jthazardccob <- matrix(unlist(parLapply(cl=cl, jthazardresb, function (x) {x$effect.measures$control$estimate})),nrow=nimpute,ncol=1)
+jthazardcseb <- matrix(unlist(parLapply(cl=cl, jthazardresb, function (x) {x$effect.measures$control$std.dev})),nrow=nimpute,ncol=1)
+jthazardresb <- matrix(c(unlist(mi.meld(q=jthazardcob,se=jthazardseb)),
+                        unlist(mi.meld(q=jthazardtcob,se=jthazardseb)),
+                        unlist(mi.meld(q=jthazardccob,se=jthazardcseb))),nrow=1,ncol=6)
 
-rm(list=c("jtaudit1","jtauditco1","jtauditse1","jtaudittco1","jtaudittse1","jtauditcco1","jtauditcse1","dataauditprob1",
-          "jtaudit2","jtauditco2","jtauditse2","jtaudittco2","jtaudittse2","jtauditcco2","jtauditcse2","dataauditprob2"))
+rm(list=c("jthazarda","jthazardcoa","jthazardsea","jthazardtcoa","jthazardtsea","jthazardccoa","jthazardcsea","datahazarda",
+          "jthazardb","jthazardcob","jthazardseb","jthazardtcob","jthazardtseb","jthazardccob","jthazardcseb","datahazardb"))
 
 ## COMBINE RESULTS INTO MATRIX FOR EXCEL ##
-jtresults <- matrix(c(jtalcuseres1a[1:2],jtalcuseres2a[1:2],jtalcuseres1b[1:2],jtalcuseres2b[1:2],jtbingeres1[1:2],jtbingeres2[1:2],jtauditres1[1:2],jtauditres2[1:2]),byrow=TRUE,ncol=4,nrow=4)
-rownames(jtresults) <- c("Drinking 2+ per week","Drinking 4+ times per week","Binge drinking","AUDIT-C Problematic drinking")
+jtresults <- matrix(c(jtfreq2resa[1:2],jtfreq2resa[1:2],jtfreq4resb[1:2],jtfreq4resb[1:2],
+                      jtbingeresa[1:2],jtbingeresb[1:2],jthazardresa[1:2],jthazardresb[1:2]),byrow=TRUE,ncol=4,nrow=4)
+rownames(jtresults) <- c("Drinking 2+ per week","Drinking 4+ times per week","Binge drinking","hazard-C Problematic drinking")
 colnames(jtresults) <- c("BPI Pain Score coef","BPI Pain Score SE","BPI Pain Int coef","BPI Pain Int SE")
 
 # Cohen's d results
 cdresults <- matrix(rep(NA,12),ncol=4,nrow=4)
-cdresults[1,1] <- smd(Mean.1=jtalcuseres1a[3],s.1=jtalcuseres1a[4]*sqrt(1514),n.1=1514,Mean.2=jtalcuseres1a[5],s.2=jtalcuseres1a[6]*sqrt(1514),n.2=1514)
+cdresults[1,1] <- smd(Mean.1=jtfreq2resa[3],s.1=jtfreq2resa[4]*sqrt(1514),n.1=1514,Mean.2=jtfreq2resa[5],s.2=jtfreq2resa[6]*sqrt(1514),n.2=1514)
 cdresults[1,2] <- sqrt(((3028/2292196)+(cdresults[1,1]^2/6052))*(3028/3026))
-cdresults[1,3] <- smd(Mean.1=jtalcuseres2a[3],s.1=jtalcuseres2a[4]*sqrt(1514),n.1=1514,Mean.2=jtalcuseres2a[5],s.2=jtalcuseres2a[6]*sqrt(1514),n.2=1514)
+cdresults[1,3] <- smd(Mean.1=jtfreq2resb[3],s.1=jtfreq2resb[4]*sqrt(1514),n.1=1514,Mean.2=jtfreq2resb[5],s.2=jtfreq2resb[6]*sqrt(1514),n.2=1514)
 cdresults[1,4] <- sqrt(((3028/2292196)+(cdresults[1,3]^2/6052))*(3028/3026))
-cdresults[2,1] <- smd(Mean.1=jtalcuseres1b[3],s.1=jtalcuseres1b[4]*sqrt(1514),n.1=1514,Mean.2=jtalcuseres1b[5],s.2=jtalcuseres1b[6]*sqrt(1514),n.2=1514)
+cdresults[2,1] <- smd(Mean.1=jtfreq4resa[3],s.1=jtfreq4resa[4]*sqrt(1514),n.1=1514,Mean.2=jtfreq4resa[5],s.2=jtfreq4resa[6]*sqrt(1514),n.2=1514)
 cdresults[2,2] <- sqrt(((3028/2292196)+(cdresults[1,1]^2/6052))*(3028/3026))
-cdresults[2,3] <- smd(Mean.1=jtalcuseres2b[3],s.1=jtalcuseres2b[4]*sqrt(1514),n.1=1514,Mean.2=jtalcuseres2b[5],s.2=jtalcuseres2b[6]*sqrt(1514),n.2=1514)
+cdresults[2,3] <- smd(Mean.1=jtfreq4resb[3],s.1=jtfreq4resb[4]*sqrt(1514),n.1=1514,Mean.2=jtfreq4resb[5],s.2=jtfreq4resb[6]*sqrt(1514),n.2=1514)
 cdresults[2,4] <- sqrt(((3028/2292196)+(cdresults[1,3]^2/6052))*(3028/3026))
-cdresults[3,1] <- smd(Mean.1=jtbingeres1[3],s.1=jtbingeres1[4]*sqrt(1514),n.1=1514,Mean.2=jtbingeres1[5],s.2=jtbingeres1[6]*sqrt(1514),n.2=1514)
+cdresults[3,1] <- smd(Mean.1=jtbingeresa[3],s.1=jtbingeresa[4]*sqrt(1514),n.1=1514,Mean.2=jtbingeresa[5],s.2=jtbingeresa[6]*sqrt(1514),n.2=1514)
 cdresults[3,2] <- sqrt(((3028/2292196)+(cdresults[2,1]^2/6052))*(3028/3026))
-cdresults[3,3] <- smd(Mean.1=jtbingeres2[3],s.1=jtbingeres2[4]*sqrt(1514),n.1=1514,Mean.2=jtbingeres2[5],s.2=jtbingeres2[6]*sqrt(1514),n.2=1514)
+cdresults[3,3] <- smd(Mean.1=jtbingeresb[3],s.1=jtbingeresb[4]*sqrt(1514),n.1=1514,Mean.2=jtbingeresb[5],s.2=jtbingeresb[6]*sqrt(1514),n.2=1514)
 cdresults[3,4] <- sqrt(((3028/2292196)+(cdresults[2,3]^2/6052))*(3028/3026))
-cdresults[4,1] <- smd(Mean.1=jtauditres1[3],s.1=jtauditres1[4]*sqrt(1514),n.1=1514,Mean.2=jtauditres1[5],s.2=jtauditres1[6]*sqrt(1514),n.2=1514)
+cdresults[4,1] <- smd(Mean.1=jthazardresa[3],s.1=jthazardresa[4]*sqrt(1514),n.1=1514,Mean.2=jthazardresa[5],s.2=jthazardresa[6]*sqrt(1514),n.2=1514)
 cdresults[4,2] <- sqrt(((3028/2292196)+(cdresults[3,1]^2/6052))*(3028/3026))
-cdresults[4,3] <- smd(Mean.1=jtauditres2[3],s.1=jtauditres2[4]*sqrt(1514),n.1=1514,Mean.2=jtauditres2[5],s.2=jtauditres2[6]*sqrt(1514),n.2=1514)
+cdresults[4,3] <- smd(Mean.1=jthazardresb[3],s.1=jthazardresb[4]*sqrt(1514),n.1=1514,Mean.2=jthazardresb[5],s.2=jthazardresb[6]*sqrt(1514),n.2=1514)
 cdresults[4,4] <- sqrt(((3028/2292196)+(cdresults[3,3]^2/6052))*(3028/3026))
-rownames(cdresults) <- c("Drinking 2+ per week","Drinking 4+ times per week","Binge drinking","AUDIT-C Problematic drinking")
+rownames(cdresults) <- c("Drinking 2+ per week","Drinking 4+ times per week","Binge drinking","hazard-C Problematic drinking")
 colnames(cdresults) <- c("BPI Pain Score d","BPI Pain Score d SE","BPI Pain Int d","BPI Pain Int d SE")
 
 save(jtresults,file=paste0(cloudstor,"PhD/Paper 6 - POINT application/Results/jtresults.RData"))
