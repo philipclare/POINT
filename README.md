@@ -1,4 +1,4 @@
-# The effect of prolonged alcohol use on chronic non-cancer pain in users of prescription opioids
+# The association between alcohol use and pain in people with chronic non-cancer pain prescribed pharmaceutical opioids – a prospective cohort study
 ## R Analysis Code
 
 This repository contains R code used in the TMLE analysis of POINT data on the effect of alcohol exposure on chronic pain, by Clare et al. 2019
